@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/shared/components/theming"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { z } from "zod"
 import { auth } from "@/libs/auth"
+import { Toaster } from "@/shared/components/sonner"
 
 const defaultValues = {
 	code: "",
@@ -54,6 +55,7 @@ function Root() {
 			<ThemeProvider defaultTheme="default" defaultColorMode="dark">
 				<HeadContent />
 				<Outlet />
+				<Toaster />
 				<TanStackRouterDevtools position="bottom-left" />
 				<ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
 			</ThemeProvider>

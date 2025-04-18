@@ -368,17 +368,6 @@ export const TransactionsTable = <TData, TValue>({
 							className="pl-8 w-full"
 						/>
 					</div>
-					<div className="flex items-center relative w-full sm:max-w-sm">
-						<Search className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							placeholder="Filtrar por categoria"
-							value={(table.getColumn("category")?.getFilterValue() as string) ?? ""}
-							onChange={(event) =>
-								table.getColumn("category")?.setFilterValue(event.target.value)
-							}
-							className="pl-8 w-full"
-						/>
-					</div>
 
 					<Modal>
 						<ModalTrigger asChild>

@@ -6,6 +6,8 @@ import { matchQuery } from "@tanstack/react-query"
 import SuperJSON from "superjson"
 import { env } from "@/environment/env"
 import { auth } from "./auth"
+import { QueryCache } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -14,6 +16,19 @@ export const queryClient = new QueryClient({
 			staleTime: Number.POSITIVE_INFINITY
 		}
 	},
+	queryCache: new QueryCache({
+		onError: () => {
+			toast.error("Algo deu errado", {
+				action: {
+					label: "Tentar novamente",
+					onClick: () => {
+						queryClient.invalidateQueries()
+					}
+				}
+			})
+		}
+	}),
+
 	mutationCache: new MutationCache({
 		onSuccess: (_data, _variables, _context, mutation) => {
 			queryClient.invalidateQueries({
