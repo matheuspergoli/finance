@@ -24,11 +24,15 @@ import { Badge } from "@/shared/components/badge"
 import {
 	ArrowDownLeft,
 	ArrowUpRight,
+	CalendarClock,
+	Check,
+	Clock,
 	PencilLine,
 	PlusIcon,
 	Trash2,
 	TrendingDownIcon,
-	TrendingUpIcon
+	TrendingUpIcon,
+	TriangleAlert
 } from "lucide-react"
 import {
 	Modal,
@@ -48,6 +52,7 @@ import { UpdateTransactionForm } from "@/features/transaction/components/update-
 import { moneyMapper } from "@repo/mappers/money"
 import { CreateTransactionForm } from "@/features/transaction/components/create-transaction-form"
 import { useDeleteTransaction } from "@/features/transaction/hooks/use-delete-transaction"
+import type { TransactionStatus } from "@repo/transaction/schema"
 
 export const Route = createFileRoute("/dashboard/")({
 	component: RouteComponent,
@@ -78,6 +83,38 @@ function RouteComponent() {
 		return moneyMapper.format(moneyMapper.fromCents(amount))
 	}
 
+	const displayStatus = (status: TransactionStatus) => {
+		switch (status) {
+			case "pending":
+				return (
+					<Badge className="border-yellow-500 text-yellow-500 bg-transparent">
+						<Clock /> Pendente
+					</Badge>
+				)
+
+			case "paid":
+				return (
+					<Badge className="border-green-500 text-green-500 bg-transparent">
+						<Check /> Pago
+					</Badge>
+				)
+
+			case "overdue":
+				return (
+					<Badge className="border-red-500 text-red-500 bg-transparent">
+						<TriangleAlert /> Atrasado
+					</Badge>
+				)
+
+			case "planned":
+				return (
+					<Badge className="border-blue-500 text-blue-500 bg-transparent">
+						<CalendarClock /> Planejado
+					</Badge>
+				)
+		}
+	}
+
 	return (
 		<main>
 			<PageTitle>Visão Geral</PageTitle>
@@ -92,7 +129,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardFooter className="flex-col items-start gap-1 text-sm">
 						<div className="line-clamp-1 flex gap-2 font-medium">
-							Entradas do mês anterior:{" "}
+							Entradas pagas do mês anterior:{" "}
 							<span>{displayCurrency(monthlyComparison.income.previousTotal)}</span>
 						</div>
 						<div className="text-muted-foreground flex items-center gap-3">
@@ -120,7 +157,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardFooter className="flex-col items-start gap-1 text-sm">
 						<div className="line-clamp-1 flex gap-2 font-medium">
-							Saídas do mês anterior:{" "}
+							Saídas pagas do mês anterior:{" "}
 							<span>{displayCurrency(monthlyComparison.expense.previousTotal)}</span>
 						</div>
 						<div className="text-muted-foreground flex items-center gap-3">
@@ -146,7 +183,9 @@ function RouteComponent() {
 							{displayCurrency(balance)}
 						</CardTitle>
 					</CardHeader>
-					<CardFooter className="text-sm">Saldo baseado nas entradas e saídas</CardFooter>
+					<CardFooter className="text-sm">
+						Saldo baseado nas entradas e saídas pagas
+					</CardFooter>
 				</Card>
 			</section>
 
@@ -194,6 +233,7 @@ function RouteComponent() {
 												<ArrowDownLeft className="h-5 w-5" />
 											)}
 										</div>
+										{displayStatus(transaction.status)}
 										<div>
 											<p className="font-medium">
 												{transaction.type === "income" ? "Entrada" : "Saída"}
@@ -278,7 +318,7 @@ function RouteComponent() {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Comparação por mês das transações</CardTitle>
+						<CardTitle>Comparação por mês das transações pagas</CardTitle>
 						<CardDescription>Janeiro - Dezembro {new Date().getFullYear()}</CardDescription>
 					</CardHeader>
 					<CardContent>

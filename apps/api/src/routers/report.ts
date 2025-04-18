@@ -1,6 +1,6 @@
 import { db } from "@/db/client"
 import { createTRPCRouter, protectedProcedure } from "@/libs/trpc"
-import { between, eq, and, isNull, sql, or } from "drizzle-orm"
+import { between, eq, and, isNull, sql, or, lte } from "drizzle-orm"
 import { transactionsTable } from "@/db/schema"
 import { dateMapper } from "@repo/mappers/date"
 import {
@@ -8,10 +8,12 @@ import {
 	calculateMonthlyComparison,
 	getCurrentYearDateRange
 } from "@repo/report"
-import { endOfMonth, startOfMonth, subMonths } from "date-fns"
+import { endOfMonth, startOfMonth, subMonths, endOfDay } from "date-fns"
 
 export const reportRouter = createTRPCRouter({
 	balance: protectedProcedure.query(async ({ ctx }) => {
+		const todayTimestamp = dateMapper.toTimestamp(endOfDay(new Date()))
+
 		const result = await db
 			.select({
 				income:
@@ -27,7 +29,9 @@ export const reportRouter = createTRPCRouter({
 			.where(
 				and(
 					isNull(transactionsTable.deletedAt),
-					eq(transactionsTable.userId, ctx.subjects.properties.id)
+					eq(transactionsTable.userId, ctx.subjects.properties.id),
+					eq(transactionsTable.status, "paid"),
+					lte(transactionsTable.date, todayTimestamp)
 				)
 			)
 			.get()
@@ -54,7 +58,8 @@ export const reportRouter = createTRPCRouter({
 				and(
 					isNull(transactionsTable.deletedAt),
 					between(transactionsTable.date, fromDate, toDate),
-					eq(transactionsTable.userId, ctx.subjects.properties.id)
+					eq(transactionsTable.userId, ctx.subjects.properties.id),
+					eq(transactionsTable.status, "paid")
 				)
 			)
 
@@ -86,6 +91,7 @@ export const reportRouter = createTRPCRouter({
 				and(
 					isNull(transactionsTable.deletedAt),
 					eq(transactionsTable.userId, ctx.subjects.properties.id),
+					eq(transactionsTable.status, "paid"),
 					or(
 						between(transactionsTable.date, currentMonthStart, currentMonthEnd),
 						between(transactionsTable.date, previousMonthStart, previousMonthEnd)

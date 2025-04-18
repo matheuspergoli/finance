@@ -6,34 +6,51 @@ import {
 	calculateMonthlyComparison,
 	getCurrentYearDateRange
 } from "@repo/report"
+import { endOfDay } from "date-fns"
+import type { TransactionOutput } from "@repo/transaction/schema"
 
 export const useOptimisticReports = () => {
 	const queryClient = useQueryClient()
 
 	const updateAllReports = () => {
-		const transactions = queryClient.getQueryData(trpc.transactionRouter.list.queryKey()) || []
+		const allTransactions =
+			queryClient.getQueryData<TransactionOutput[]>(trpc.transactionRouter.list.queryKey()) ||
+			[]
+
+		const todayTimestamp = endOfDay(new Date()).getTime()
+
+		const balanceTransactions = allTransactions
+			.filter((tx) => tx.status === "paid" && tx.date.getTime() <= todayTimestamp)
+			.map((v) => ({ ...v, date: v.date.getTime() }))
 
 		queryClient.setQueryData(trpc.reportRouter.balance.queryKey(), () => {
-			return calculateBalance(transactions.map((v) => ({ ...v, date: v.date.getTime() })))
+			return calculateBalance(balanceTransactions)
 		})
 
+		const comparisonTransactions = allTransactions
+			.filter((tx) => tx.status === "paid")
+			.map((v) => ({ ...v, date: v.date.getTime() }))
+
 		queryClient.setQueryData(trpc.reportRouter.monthlyComparison.queryKey(), () => {
-			return calculateMonthlyComparison(
-				transactions.map((v) => ({ ...v, date: v.date.getTime() }))
-			)
+			return calculateMonthlyComparison(comparisonTransactions)
 		})
 
 		const yearRange = getCurrentYearDateRange()
 		const monthlySummaryKey = trpc.reportRouter.listMonthlySummary.queryKey()
-
 		const fromTimestamp = yearRange.from.getTime()
 		const toTimestamp = yearRange.to.getTime()
-		const yearTransactions = transactions.filter(
-			(tx) => tx.date.getTime() >= fromTimestamp && tx.date.getTime() <= toTimestamp
-		)
+
+		const monthlySummaryTransactions = allTransactions
+			.filter(
+				(tx) =>
+					tx.status === "paid" &&
+					tx.date.getTime() >= fromTimestamp &&
+					tx.date.getTime() <= toTimestamp
+			)
+			.map((v) => ({ ...v, date: v.date.getTime() }))
 
 		queryClient.setQueryData(monthlySummaryKey, () => {
-			return groupByMonth(yearTransactions.map((v) => ({ ...v, date: v.date.getTime() })))
+			return groupByMonth(monthlySummaryTransactions)
 		})
 	}
 
