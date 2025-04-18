@@ -1,0 +1,12 @@
+{
+	"extends": "@repo/tsconfig/internal-package.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"jsxImportSource": "hono/jsx",
+		"types": ["@repo/tsconfig/reset", "node"]
+	},
+	"include": ["src"]
+}

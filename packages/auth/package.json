@@ -1,0 +1,30 @@
+{
+	"name": "@repo/auth",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		"./ui/*": "./src/ui/*.tsx",
+		"./issuer": "./src/issuer.ts",
+		"./client": "./src/client.ts",
+		"./utils/*": "./src/utils/*.ts",
+		"./subjects": "./src/subjects.ts",
+		"./providers": "./src/providers.ts",
+		"./storage/*": "./src/storage/*.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "rm -rf dist .turbo node_modules"
+	},
+	"devDependencies": {
+		"@repo/tsconfig": "workspace:*",
+		"@types/node": "^22.14.1",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"@libsql/client": "^0.15.4",
+		"@openauthjs/openauth": "^0.4.3",
+		"hono": "^4.7.7",
+		"zod": "^3.24.3"
+	}
+}

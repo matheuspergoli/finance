@@ -1,0 +1,21 @@
+{
+	"name": "@repo/report",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "rm -rf dist .turbo node_modules"
+	},
+	"devDependencies": {
+		"@repo/tsconfig": "workspace:*",
+		"@types/node": "^22.14.1",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"date-fns": "^4.1.0"
+	}
+}

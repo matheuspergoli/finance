@@ -1,0 +1,22 @@
+{
+	"name": "@repo/transaction",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		"./schema": "./src/schema/transaction-schema.ts",
+		"./service": "./src/service/transaction-service.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "rm -rf dist .turbo node_modules"
+	},
+	"devDependencies": {
+		"@repo/tsconfig": "workspace:*",
+		"@types/node": "^22.14.1",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"zod": "^3.24.3"
+	}
+}

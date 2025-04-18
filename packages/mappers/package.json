@@ -1,0 +1,22 @@
+{
+	"name": "@repo/mappers",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		"./date": "./src/date.ts",
+		"./money": "./src/money.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "rm -rf dist .turbo node_modules"
+	},
+	"devDependencies": {
+		"@repo/tsconfig": "workspace:*",
+		"@types/node": "^22.14.1",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"date-fns": "^4.1.0"
+	}
+}
