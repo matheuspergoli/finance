@@ -1,5 +1,5 @@
-import { createTRPCRouter, publicProcedure } from "@/libs/trpc"
 import { authClient, subjects } from "@/libs/auth"
+import { createTRPCRouter, publicProcedure } from "@/libs/trpc"
 
 export const userRouter = createTRPCRouter({
 	user: publicProcedure.query(async ({ ctx }) => {

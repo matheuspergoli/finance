@@ -1,9 +1,9 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
 
+import { trpc } from "@/libs/trpc"
 import { MainSidebar } from "@/shared/components/app-sidebar/main-sidebar"
 import { Separator } from "@/shared/components/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/shared/components/sidebar"
-import { trpc } from "@/libs/trpc"
 
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,

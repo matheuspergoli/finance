@@ -1,10 +1,10 @@
+import { randomUUID } from "node:crypto"
 import type {
 	TransactionPaymentMethod,
 	TransactionStatus,
 	TransactionType
 } from "@repo/transaction/schema"
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
-import { randomUUID } from "node:crypto"
 
 export const transactionsTable = sqliteTable(
 	"transactions",

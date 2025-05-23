@@ -1,13 +1,13 @@
-import { createTRPCClient, httpBatchLink } from "@trpc/client"
-import { MutationCache, QueryClient } from "@tanstack/react-query"
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query"
-import type { AppRouter } from "@repo/types"
-import { matchQuery } from "@tanstack/react-query"
-import SuperJSON from "superjson"
 import { env } from "@/environment/env"
-import { auth } from "./auth"
+import type { AppRouter } from "@repo/types"
+import { MutationCache, QueryClient } from "@tanstack/react-query"
+import { matchQuery } from "@tanstack/react-query"
 import { QueryCache } from "@tanstack/react-query"
+import { createTRPCClient, httpBatchLink } from "@trpc/client"
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query"
 import { toast } from "sonner"
+import SuperJSON from "superjson"
+import { auth } from "./auth"
 
 export const queryClient = new QueryClient({
 	defaultOptions: {

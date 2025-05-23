@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router"
+import {
+	TransactionsTable,
+	transactionColumns
+} from "@/features/transaction/components/transaction-table"
+import { trpc } from "@/libs/trpc"
 import { PageTitle } from "@/shared/components/page-title"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { trpc } from "@/libs/trpc"
-import {
-	transactionColumns,
-	TransactionsTable
-} from "@/features/transaction/components/transaction-table"
+import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard/transactions")({
 	component: RouteComponent,

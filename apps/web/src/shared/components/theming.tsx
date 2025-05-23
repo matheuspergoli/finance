@@ -1,4 +1,4 @@
-import { baseColors, type BaseColor } from "@/libs/colors"
+import { type BaseColor, baseColors } from "@/libs/colors"
 import React from "react"
 
 type ColorMode = "dark" | "light" | "system"

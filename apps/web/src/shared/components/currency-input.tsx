@@ -1,5 +1,5 @@
-import { Input } from "./input"
 import { NumericFormat, type NumericFormatProps } from "react-number-format"
+import { Input } from "./input"
 
 export const CurrencyInput = (props: NumericFormatProps) => {
 	return (

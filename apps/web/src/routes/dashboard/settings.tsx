@@ -1,3 +1,4 @@
+import { baseColors } from "@/libs/colors"
 import {
 	Card,
 	CardContent,
@@ -5,7 +6,7 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/shared/components/card"
-import { baseColors } from "@/libs/colors"
+import { PageTitle } from "@/shared/components/page-title"
 import {
 	Select,
 	SelectContent,
@@ -15,7 +16,6 @@ import {
 } from "@/shared/components/select"
 import { Switch } from "@/shared/components/switch"
 import { useTheme } from "@/shared/components/theming"
-import { PageTitle } from "@/shared/components/page-title"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard/settings")({

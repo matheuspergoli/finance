@@ -1,10 +1,9 @@
-import { env } from "./environment/env"
+import { createTRPCContext } from "@/libs/trpc"
+import { trpcServer } from "@hono/trpc-server"
 import { Hono } from "hono"
 import { cors } from "hono/cors"
-import { trpcServer } from "@hono/trpc-server"
-import { createTRPCContext } from "@/libs/trpc"
+import { env } from "./environment/env"
 import { appRouter } from "./routers/_app"
-import { authApp } from "@/libs/auth"
 
 const app = new Hono()
 
@@ -16,8 +15,6 @@ app.use(
 		allowHeaders: ["Content-Type", "Authorization"]
 	})
 )
-
-app.route("/", authApp)
 
 app.use(
 	"/trpc/*",

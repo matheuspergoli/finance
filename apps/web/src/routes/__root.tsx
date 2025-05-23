@@ -1,18 +1,18 @@
+import { auth } from "@/libs/auth"
+import { queryClient, trpc } from "@/libs/trpc"
+import { Toaster } from "@/shared/components/sonner"
+import { ThemeProvider } from "@/shared/components/theming"
 import type { QueryClient } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
-	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
+	createRootRouteWithContext,
 	stripSearchParams
 } from "@tanstack/react-router"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { queryClient, trpc } from "@/libs/trpc"
-import { ThemeProvider } from "@/shared/components/theming"
-import { QueryClientProvider } from "@tanstack/react-query"
 import { z } from "zod"
-import { auth } from "@/libs/auth"
-import { Toaster } from "@/shared/components/sonner"
 
 const defaultValues = {
 	code: "",
@@ -35,9 +35,9 @@ export const Route = createRootRouteWithContext<{
 			return
 		}
 
-		const token = await auth.initializeAuth()
+		const { isAuthenticated } = await auth.checkAuthStatus()
 
-		if (token) {
+		if (isAuthenticated) {
 			await context.queryClient.prefetchQuery(trpc.userRouter.user.queryOptions())
 		}
 	},

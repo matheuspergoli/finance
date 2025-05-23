@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "@/libs/trpc"
-import { userRouter } from "./user"
-import { transactionRouter } from "./transaction"
 import { reportRouter } from "./report"
+import { transactionRouter } from "./transaction"
+import { userRouter } from "./user"
 
 export const appRouter = createTRPCRouter({
 	userRouter,

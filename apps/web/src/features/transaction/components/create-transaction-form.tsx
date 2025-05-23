@@ -1,16 +1,16 @@
-import { useAppForm } from "@/shared/components/form"
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger
 } from "@/shared/components/accordion"
+import { useAppForm } from "@/shared/components/form"
+import {
+	type CreateTransactionInput,
+	CreateTransactionInputSchema
+} from "@repo/transaction/schema"
 import { v4 } from "uuid"
 import { useCreateTransaction } from "../hooks/use-create-transaction"
-import {
-	CreateTransactionInputSchema,
-	type CreateTransactionInput
-} from "@repo/transaction/schema"
 
 export const CreateTransactionForm = () => {
 	const { mutateAsync: createTransaction } = useCreateTransaction()

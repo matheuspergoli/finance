@@ -1,8 +1,0 @@
-{
-	"extends": "@repo/tsconfig/internal-package.json",
-	"compilerOptions": {
-		"jsxImportSource": "hono/jsx",
-		"types": ["@repo/tsconfig/reset", "node"]
-	},
-	"include": ["src"]
-}

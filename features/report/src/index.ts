@@ -1,5 +1,5 @@
+import { endOfMonth, format, parseISO, startOfMonth, subMonths } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { format, parseISO, startOfMonth, endOfMonth, subMonths } from "date-fns"
 
 export type TransactionBase = {
 	date: number

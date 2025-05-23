@@ -1,13 +1,7 @@
-import { PageTitle } from "@/shared/components/page-title"
-import { createFileRoute } from "@tanstack/react-router"
-import {
-	Card,
-	CardDescription,
-	CardFooter,
-	CardContent,
-	CardHeader,
-	CardTitle
-} from "@/shared/components/card"
+import { CreateTransactionForm } from "@/features/transaction/components/create-transaction-form"
+import { UpdateTransactionForm } from "@/features/transaction/components/update-transaction-form"
+import { useDeleteTransaction } from "@/features/transaction/hooks/use-delete-transaction"
+import { trpc } from "@/libs/trpc"
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -19,8 +13,32 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger
 } from "@/shared/components/alert-dialog"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/shared/components/chart"
 import { Badge } from "@/shared/components/badge"
+import { Button } from "@/shared/components/button"
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle
+} from "@/shared/components/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/shared/components/chart"
+import {
+	Modal,
+	ModalContent,
+	ModalHeader,
+	ModalTitle,
+	ModalTrigger
+} from "@/shared/components/modal"
+import { PageTitle } from "@/shared/components/page-title"
+import { moneyMapper } from "@repo/mappers/money"
+import type { TransactionStatus } from "@repo/transaction/schema"
+import { capitalize } from "@repo/utils"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { createFileRoute } from "@tanstack/react-router"
+import { format, subMonths } from "date-fns"
+import { ptBR } from "date-fns/locale"
 import {
 	ArrowDownLeft,
 	ArrowUpRight,
@@ -34,25 +52,7 @@ import {
 	TrendingUpIcon,
 	TriangleAlert
 } from "lucide-react"
-import {
-	Modal,
-	ModalTitle,
-	ModalHeader,
-	ModalContent,
-	ModalTrigger
-} from "@/shared/components/modal"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { Button } from "@/shared/components/button"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { trpc } from "@/libs/trpc"
-import { capitalize } from "@repo/utils"
-import { format, subMonths } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { UpdateTransactionForm } from "@/features/transaction/components/update-transaction-form"
-import { moneyMapper } from "@repo/mappers/money"
-import { CreateTransactionForm } from "@/features/transaction/components/create-transaction-form"
-import { useDeleteTransaction } from "@/features/transaction/hooks/use-delete-transaction"
-import type { TransactionStatus } from "@repo/transaction/schema"
 
 export const Route = createFileRoute("/dashboard/")({
 	component: RouteComponent,

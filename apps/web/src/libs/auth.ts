@@ -1,7 +1,6 @@
-import { z } from "zod"
-import { router } from "@/router"
 import { env } from "@/environment/env"
-import { createClient } from "@repo/auth/client"
+import { createClient } from "@openauthjs/openauth/client"
+import { z } from "zod"
 import { queryClient } from "./trpc"
 
 const ACCESS_KEY = "access_token"
@@ -10,9 +9,9 @@ const CHALLENGE_KEY = "challenge_token"
 
 const ChallengeSchema = z.object({ verifier: z.string(), state: z.string() })
 
-const client = createClient({
-	clientID: "vite",
-	issuer: env.VITE_BACKEND_URL
+export const client = createClient({
+	clientID: "finance",
+	issuer: env.VITE_DRAFTAUTH_URL
 })
 
 const tokenStorage = {
@@ -49,10 +48,6 @@ const logout = async () => {
 	tokenStorage.clearTokens()
 
 	await queryClient.invalidateQueries()
-
-	router.invalidate().finally(() => {
-		router.navigate({ to: "/", replace: true })
-	})
 }
 
 const callback = async ({ code, state }: { code: string; state: string }) => {
@@ -62,32 +57,24 @@ const callback = async ({ code, state }: { code: string; state: string }) => {
 
 	const parsedChallenge = ChallengeSchema.safeParse(unparsedChallenge)
 
-	const handleErrorNavigation = (errorDetails?: Record<string, unknown>) => {
-		router.navigate({ to: "/", replace: true, search: errorDetails })
-	}
-
 	if (!parsedChallenge.success) {
-		handleErrorNavigation({ error: "challenge_parse_error" })
-		return
+		return { success: false, error: "challenge_parse_error" }
 	}
 
 	if (!code) {
-		handleErrorNavigation({ error: "no_code" })
-		return
+		return { success: false, error: "no_code" }
 	}
 
 	const { data: challenge } = parsedChallenge
 
 	if (state !== challenge.state || !challenge.verifier) {
-		handleErrorNavigation({ error: "invalid_callback_state" })
-		return
+		return { success: false, error: "invalid_callback_state" }
 	}
 
 	const exchanged = await client.exchange(code, location.origin, challenge.verifier)
 
 	if (exchanged.err) {
-		handleErrorNavigation({ error: "token_exchange_failed" })
-		return
+		return { success: false, error: "token_exchange_failed" }
 	}
 
 	tokenStorage.setAccessToken(exchanged.tokens.access)
@@ -95,7 +82,7 @@ const callback = async ({ code, state }: { code: string; state: string }) => {
 
 	await queryClient.invalidateQueries()
 
-	router.navigate({ to: "/", replace: true })
+	return { success: true }
 }
 
 const refreshTokens = async () => {
@@ -104,48 +91,51 @@ const refreshTokens = async () => {
 
 	if (!storedRefreshToken) return null
 
-	const next = await client.refresh(storedRefreshToken, {
-		access: storedAccessToken ?? undefined
-	})
+	try {
+		const next = await client.refresh(storedRefreshToken, {
+			access: storedAccessToken ?? undefined
+		})
 
-	if (next.err) {
-		logout()
+		if (next.err) {
+			return null
+		}
 
+		if (next.tokens) {
+			tokenStorage.setAccessToken(next.tokens.access)
+			tokenStorage.setRefreshToken(next.tokens.refresh)
+
+			await queryClient.invalidateQueries()
+
+			return next.tokens.access
+		}
+
+		return storedAccessToken
+	} catch (error) {
 		return null
 	}
-
-	if (next.tokens) {
-		tokenStorage.setAccessToken(next.tokens.access)
-		tokenStorage.setRefreshToken(next.tokens.refresh)
-
-		await queryClient.invalidateQueries()
-
-		return next.tokens.access
-	}
-
-	return storedAccessToken
 }
 
-const initializeAuth = async () => {
-	const currentAccessToken = tokenStorage.getAccessToken()
+const checkAuthStatus = async (): Promise<
+	| { isAuthenticated: true; accessToken: string }
+	| { isAuthenticated: false; accessToken: null }
+> => {
+	const storedRefreshToken = tokenStorage.getRefreshToken()
 
-	if (currentAccessToken) {
-		return currentAccessToken
+	if (!storedRefreshToken) {
+		tokenStorage.clearTokens()
+
+		return { isAuthenticated: false, accessToken: null }
 	}
 
-	const currentRefreshToken = tokenStorage.getRefreshToken()
+	const currentValidAccessToken = await refreshTokens()
 
-	if (currentRefreshToken) {
-		const newAccessToken = await refreshTokens()
-
-		if (newAccessToken) {
-			return newAccessToken
-		}
+	if (currentValidAccessToken) {
+		return { isAuthenticated: true, accessToken: currentValidAccessToken }
 	}
 
 	tokenStorage.clearTokens()
 
-	return null
+	return { isAuthenticated: false, accessToken: null }
 }
 
 export const auth = {
@@ -155,5 +145,5 @@ export const auth = {
 	callback,
 	tokenStorage,
 	refreshTokens,
-	initializeAuth
+	checkAuthStatus
 }

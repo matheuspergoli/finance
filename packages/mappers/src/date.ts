@@ -1,5 +1,5 @@
+import { format as formatDate, fromUnixTime, parseISO } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { format as formatDate, parseISO, fromUnixTime } from "date-fns"
 
 export type DateFormat = "short" | "full" | "dateOnly" | "timeOnly" | "yearMonth"
 

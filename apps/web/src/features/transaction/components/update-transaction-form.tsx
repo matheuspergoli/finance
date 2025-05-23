@@ -1,16 +1,16 @@
-import { useAppForm } from "@/shared/components/form"
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger
 } from "@/shared/components/accordion"
-import { useUpdateTransaction } from "../hooks/use-update-transaction"
-import {
-	UpdateTransactionInputSchema,
-	type UpdateTransactionInput
-} from "@repo/transaction/schema"
+import { useAppForm } from "@/shared/components/form"
 import { moneyMapper } from "@repo/mappers/money"
+import {
+	type UpdateTransactionInput,
+	UpdateTransactionInputSchema
+} from "@repo/transaction/schema"
+import { useUpdateTransaction } from "../hooks/use-update-transaction"
 
 export const UpdateTransactionForm = (props: UpdateTransactionInput) => {
 	const { mutateAsync: updateTransaction } = useUpdateTransaction()

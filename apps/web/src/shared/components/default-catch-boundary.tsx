@@ -1,10 +1,10 @@
 import {
 	ErrorComponent,
+	type ErrorComponentProps,
 	Link,
 	rootRouteId,
 	useMatch,
-	useRouter,
-	type ErrorComponentProps
+	useRouter
 } from "@tanstack/react-router"
 import { Button } from "./button"
 

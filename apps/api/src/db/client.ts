@@ -1,8 +1,8 @@
+import { type Client, type Config, createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import { createClient, type Client, type Config } from "@libsql/client"
 
-import * as schema from "./schema"
 import { env } from "@/environment/env"
+import * as schema from "./schema"
 
 const globalForDb = globalThis as unknown as {
 	client: Client | undefined

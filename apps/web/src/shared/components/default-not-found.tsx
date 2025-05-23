@@ -1,5 +1,5 @@
-import type { ReactNode } from "react"
 import { Link } from "@tanstack/react-router"
+import type { ReactNode } from "react"
 import { Button } from "./button"
 
 export const DefaultNotFound = ({ children }: { children?: ReactNode }) => {

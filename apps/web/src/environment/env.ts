@@ -3,7 +3,8 @@ import { z } from "zod"
 
 export const env = createEnv({
 	client: {
-		VITE_BACKEND_URL: z.string()
+		VITE_BACKEND_URL: z.string(),
+		VITE_DRAFTAUTH_URL: z.string()
 	},
 	clientPrefix: "VITE_",
 	runtimeEnv: import.meta.env,

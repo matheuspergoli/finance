@@ -8,6 +8,7 @@ export const env = createEnv({
 		GITHUB_CLIENT_SECRET: z.string(),
 		GOOGLE_CLIENT_ID: z.string(),
 		GOOGLE_CLIENT_SECRET: z.string(),
+		DRAFTAUTH_URL: z.string(),
 		DATABASE_URL: z.string(),
 		DATABASE_AUTH_TOKEN: z.string(),
 		DATABASE_URL_DEV: z.string().optional().default("file:./db.sqlite"),

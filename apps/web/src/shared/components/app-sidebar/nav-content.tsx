@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router"
 
+import { ArrowLeftRight, LayoutDashboard, Settings, Tags } from "lucide-react"
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
@@ -7,7 +8,6 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem
 } from "../sidebar"
-import { ArrowLeftRight, LayoutDashboard, Settings, Tags } from "lucide-react"
 
 export const NavContent = () => {
 	return (
